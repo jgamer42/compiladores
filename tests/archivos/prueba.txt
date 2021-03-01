@@ -1,0 +1,5 @@
+85 PRINT 
+50 esta_es_mi_variable 
+16 
+10E-50
+5E20
