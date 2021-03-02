@@ -13,12 +13,13 @@ class Lexer(sly.Lexer):
         #identificadores
         NAMES,
         #constantes
-        NULL,NUMBER,TRUE,FALSE,STRING
+       NUMBER,STRING
     }
-    literals = '+-*/()^:'
+    literals = '+-*/()^:,;='
     ignore = r' \t\r'
+
     #PALABRAS RESERVADAS
-    NAMES = r"[a-zA-Z_][a-zA-Z_\-0-9]*"
+    NAMES = r"[a-zA-Z][a-zA-Z0-9]*"
     NAMES["IF"] = IF
     NAMES["FOR"] = FOR
     NAMES["WHILE"] = WHILE
@@ -41,11 +42,6 @@ class Lexer(sly.Lexer):
     NAMES["READ"] = READ
     NAMES["REM"] = REM
 
-    NAMES["TRUE"] = TRUE 
-    NAMES["FALSE"] = FALSE 
-    NAMES["Null"] = NULL 
-
-
     #OPERADORES
     LE = r"<="
     LT = r"<"
@@ -54,7 +50,7 @@ class Lexer(sly.Lexer):
     GT = r">"
     NE = r"<>"
 
-    @_(r'\d+(E-?\d+(.\d)?)?(\.\d+)?')
+    @_(r'-?(\d+(\.\d+)?(E-?\d+)?)',r'-?(\.\d+)(E-?\d+)?')
     def NUMBER(self,t):
         try:
             t.value = int(t.value)
@@ -63,22 +59,22 @@ class Lexer(sly.Lexer):
         return t
 
 
-    @_(r"'[^']*'",r'"[^"]*"')
+    @_(r'"[^"]*"')
     def STRING(self,t):
         return t
 
     
     @_(r'\n+')
     def ignore_newline(self, t):
-        self.lineno += 1
-
+        self.lineno += t.value.count("\n")
 
     def error(self,t):
         print(f" Caracter es ilegal {t}")
         self.index += 1
 
 
-if __name__ == '__main__':
+#para correr el lexer con los datos que lee desde un archivo
+def main_archivo():
 	if len(sys.argv) != 2:
 		print('uso: baslex.py filename')
 		sys.exit(1)
@@ -88,3 +84,16 @@ if __name__ == '__main__':
 	lex = Lexer()
 	for tok in lex.tokenize(data):
 		print(tok)
+        
+#para probar el lexer manualmente
+def main_consola():
+    lex = Lexer()
+    text = input()
+    while True:
+        for tok in lex.tokenize(text):
+            print(tok)
+        break
+
+if __name__ == '__main__':
+    #main_consola()
+    main_archivo()

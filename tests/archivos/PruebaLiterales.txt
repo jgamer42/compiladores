@@ -4,6 +4,6 @@
 40 LET G=(5+F)-(10-D)
 50 LET H= G^4
 55 PRINT A,B,C
-60 PRINT D,E,SQR(F),"1+1", "2*4"
+60 PRINT D,E,,"1+1", "2*4"
 70 PRINT G,H
 
